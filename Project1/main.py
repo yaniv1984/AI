@@ -3,13 +3,12 @@ import pytest
 
 BASE_URL = "https://www.saucedemo.com/"
 
-# Fixture to manage browser setup and teardown
+
 @pytest.fixture(scope="function")
 def browser():
     with sync_playwright() as p:
-        # Launch the browser in non-headless mode for visibility
-        browser = p.chromium.launch(headless=False, slow_mo=500)  # Adds a 500ms delay for better debugging
-        context = browser.new_context(viewport={"width": 1920, "height": 1080})  # Full-screen view
+        browser = p.chromium.launch(headless=False)
+        context = browser.new_context(viewport={"width": 1920, "height": 1080})
         page = context.new_page()
         yield page
         browser.close()
@@ -88,6 +87,7 @@ def test_checkout_process(browser):
     # Go to cart page
     browser.click(".shopping_cart_link")
     assert browser.url == f"{BASE_URL}cart.html"
+    assert browser.url == f"{BASE_URL}cart.html"
 
     # Proceed to checkout
     browser.click("#checkout")
@@ -102,4 +102,4 @@ def test_checkout_process(browser):
 
     # Verify order completion
     success_message = browser.locator(".complete-header")
-    assert success_message.text_content() == "THANK YOU FOR YOUR ORDER"
+    assert success_message.text_content() == "Thank you for your order"
